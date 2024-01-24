@@ -4,6 +4,30 @@ import io
 import base64
 import torch
 from torchvision import transforms
+from torch import nn
+
+# Model architecture
+model = nn.Sequential(
+    nn.Linear(784, 128),
+    nn.ReLU(),
+    nn.Linear(128, 64),
+    nn.ReLU(),
+    nn.Linear(64, 10),
+    nn.LogSoftmax(dim=1)
+)
+
+# Load the model
+model.load_state_dict(torch.load('./mnist_model.pth'))
+model.eval()
+
+# Load the model
+model.load_state_dict(torch.load('./mnist_model.pth'))
+model.eval()
+
+# Check if a GPU is available and if not, use a CPU
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+model.to(device)
+
 
 app = Flask(__name__)
 
@@ -13,23 +37,42 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    # Get the image data from the POST request
     data = request.get_json()
     image_data = data['image']
     image_data = base64.b64decode(image_data.split(',')[1])
+
+    # Open the image and convert it to grayscale
     image = Image.open(io.BytesIO(image_data)).convert('L')
-    image = transforms.ToTensor()(image).unsqueeze(0)
-
-
-    # Random naive model, just gives random results regardless of input
-    def model(images):
-        batch_size = images.shape[0]  # Get the batch size from the images tensor
-        num_classes = 10  # Define the number of classes (10 for MNIST)
-        return torch.randint(0, 2, (batch_size, num_classes))  # Return a tensor of random integers
-    # Use your model for inference here
+    # Save the image to a file
+    image.save('received_image.png')
     
-    output = model(image)  # Make a prediction
-    _, predicted = torch.max(output.data, 1)  # Get the class with the highest probability
-    result = predicted.item()  # Convert the result to a Python number
+
+    # Resize and normalize the image
+    transform = transforms.Compose([
+        transforms.Resize((28, 28)),
+        transforms.ToTensor(),
+        transforms.Normalize((0.5,), (0.5,))
+    ])
+    image = transform(image)
+
+    # Add a batch dimension and flatten the image
+    image = image.unsqueeze(0)
+    image = image.view(image.shape[0], -1)
+
+    # Move the image to the device
+    image = image.to(device)
+
+    # Get the model's predictions
+    output = model(image)
+    probabilities = torch.nn.functional.softmax(output, dim=1)
+    print(probabilities)
+    
+    _, predicted = torch.max(output.data, 1)
+
+    # Convert the result to a Python number
+    result = predicted.item()
+    print(result)
 
     return jsonify({'result': result})
 
