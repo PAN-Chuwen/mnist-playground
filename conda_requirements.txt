@@ -22,6 +22,7 @@ ca-certificates=2023.12.12=h06a4308_0
 certifi=2023.11.17=py38h06a4308_0
 cffi=1.16.0=py38h5eee18b_0
 charset-normalizer=2.0.4=pyhd3eb1b0_0
+click=8.1.7=py38h06a4308_0
 comm=0.1.2=py38h06a4308_0
 contourpy=1.0.5=py38hdb19cb5_0
 cryptography=41.0.7=py38hdda0065_0
@@ -42,6 +43,7 @@ executing=0.8.3=pyhd3eb1b0_0
 expat=2.5.0=h6a678d5_0
 ffmpeg=4.3=hf484d3e_0
 filelock=3.13.1=py38h06a4308_0
+flask=2.2.5=py38h06a4308_0
 fontconfig=2.14.1=h4c34cd2_2
 fonttools=4.25.0=pyhd3eb1b0_0
 freetype=2.12.1=h4a9f257_0
@@ -61,6 +63,7 @@ intel-openmp=2023.1.0=hdb19cb5_46306
 ipykernel=6.25.0=py38h2f386ee_0
 ipython=8.12.2=py38h06a4308_0
 ipywidgets=8.0.4=py38h06a4308_0
+itsdangerous=2.0.1=pyhd3eb1b0_0
 jedi=0.18.1=py38h06a4308_1
 jinja2=3.1.2=py38h06a4308_0
 jpeg=9e=h5eee18b_1
@@ -221,6 +224,7 @@ urllib3=1.26.18=py38h06a4308_0
 wcwidth=0.2.5=pyhd3eb1b0_0
 webencodings=0.5.1=py38_1
 websocket-client=0.58.0=py38h06a4308_4
+werkzeug=2.2.3=py38h06a4308_0
 wheel=0.41.2=py38h06a4308_0
 widgetsnbextension=4.0.5=py38h06a4308_0
 xz=5.4.5=h5eee18b_0
