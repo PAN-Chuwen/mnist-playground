@@ -1,10 +1,13 @@
-from flask import Flask, render_template, request, jsonify
+from aiohttp import web
+from aiohttp.web_request import Request
+from aiohttp.web_response import Response
 from PIL import Image
 import io
 import base64
 import torch
 from torchvision import transforms
 from torch import nn
+import json
 
 # Model architecture
 model = nn.Sequential(
@@ -20,25 +23,13 @@ model = nn.Sequential(
 model.load_state_dict(torch.load('./mnist_model.pth'))
 model.eval()
 
-# Load the model
-model.load_state_dict(torch.load('./mnist_model.pth'))
-model.eval()
-
 # Check if a GPU is available and if not, use a CPU
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
-
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return render_template('index.html')
-
-@app.route('/predict', methods=['POST'])
-def predict():
+async def predict(request: Request) -> Response:
     # Get the image data from the POST request
-    data = request.get_json()
+    data = await request.json()
     image_data = data['image']
     image_data = base64.b64decode(image_data.split(',')[1])
 
@@ -46,7 +37,6 @@ def predict():
     image = Image.open(io.BytesIO(image_data)).convert('L')
     # Save the image to a file
     image.save('received_image.png')
-    
 
     # Resize and normalize the image
     transform = transforms.Compose([
@@ -67,14 +57,27 @@ def predict():
     output = model(image)
     probabilities = torch.nn.functional.softmax(output, dim=1)
     print(probabilities)
-    
+
     _, predicted = torch.max(output.data, 1)
 
     # Convert the result to a Python number
     result = predicted.item()
     print(result)
 
-    return jsonify({'result': result})
+    return web.json_response({'result': result})
+
+# Serve the index.html file
+async def index(request):
+    return web.FileResponse('./index.html')
+
+# Serve the script.js file
+async def script(request):
+    return web.FileResponse('./script.js')
+
+app = web.Application()
+app.router.add_get('/', index)
+app.router.add_get('/script.js', script)
+app.router.add_post('/predict', predict)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    web.run_app(app)
