@@ -3,11 +3,14 @@
 # platform: linux-64
 _libgcc_mutex=0.1=main
 _openmp_mutex=5.1=1_gnu
+aiohttp=3.9.3=py38h5eee18b_0
+aiosignal=1.2.0=pyhd3eb1b0_0
 anyio=3.5.0=py38h06a4308_0
 argon2-cffi=21.3.0=pyhd3eb1b0_0
 argon2-cffi-bindings=21.2.0=py38h7f8727e_0
 asttokens=2.0.5=pyhd3eb1b0_0
 async-lru=2.0.4=py38h06a4308_0
+async-timeout=4.0.3=py38h06a4308_0
 attrs=23.1.0=py38h06a4308_0
 babel=2.11.0=py38h06a4308_0
 backcall=0.2.0=pyhd3eb1b0_0
@@ -19,7 +22,7 @@ brotli-bin=1.0.9=h5eee18b_7
 brotli-python=1.0.9=py38h6a678d5_7
 bzip2=1.0.8=h7b6447c_0
 ca-certificates=2023.12.12=h06a4308_0
-certifi=2023.11.17=py38h06a4308_0
+certifi=2024.2.2=py38h06a4308_0
 cffi=1.16.0=py38h5eee18b_0
 charset-normalizer=2.0.4=pyhd3eb1b0_0
 click=8.1.7=py38h06a4308_0
@@ -47,6 +50,7 @@ flask=2.2.5=py38h06a4308_0
 fontconfig=2.14.1=h4c34cd2_2
 fonttools=4.25.0=pyhd3eb1b0_0
 freetype=2.12.1=h4a9f257_0
+frozenlist=1.4.0=py38h5eee18b_0
 giflib=5.2.1=h5eee18b_3
 glib=2.69.1=he621ea3_2
 gmp=6.2.1=h295c915_3
@@ -139,6 +143,7 @@ mkl_random=1.2.4=py38hdb19cb5_0
 mpc=1.1.0=h10f8cd9_1
 mpfr=4.0.2=hb69a4c5_1
 mpmath=1.3.0=py38h06a4308_0
+multidict=6.0.4=py38h5eee18b_0
 munkres=1.1.4=py_0
 mysql=5.7.24=h721c034_2
 nbclient=0.8.0=py38h06a4308_0
@@ -154,7 +159,7 @@ numpy=1.24.3=py38hf6e8229_1
 numpy-base=1.24.3=py38h060ed82_1
 openh264=2.1.1=h4ff587b_0
 openjpeg=2.4.0=h3ad879b_0
-openssl=3.0.12=h7f8727e_0
+openssl=3.0.13=h7f8727e_0
 overrides=7.4.0=py38h06a4308_0
 packaging=23.1=py38h06a4308_0
 pandocfilters=1.5.0=pyhd3eb1b0_0
@@ -229,6 +234,7 @@ wheel=0.41.2=py38h06a4308_0
 widgetsnbextension=4.0.5=py38h06a4308_0
 xz=5.4.5=h5eee18b_0
 yaml=0.2.5=h7b6447c_0
+yarl=1.9.3=py38h5eee18b_0
 zeromq=4.3.5=h6a678d5_0
 zipp=3.17.0=py38h06a4308_0
 zlib=1.2.13=h5eee18b_0
