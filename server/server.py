@@ -38,16 +38,20 @@ async def predict(request: Request) -> Response:
     # Save the image to a file
     image.save('received_image.png')
 
+    # Resize the image to 28x28
+    image = image.resize((28, 28))
+
     # Resize and normalize the image
     transform = transforms.Compose([
-        transforms.Resize((28, 28)),
         transforms.ToTensor(),
         transforms.Normalize((0.5,), (0.5,))
     ])
     image = transform(image)
 
-    # Add a batch dimension and flatten the image
+    # Add a batch dimension, treat the image as a batch of size 1
     image = image.unsqueeze(0)
+
+    # Flatten the image
     image = image.view(image.shape[0], -1)
 
     # Move the image to the device
@@ -61,7 +65,7 @@ async def predict(request: Request) -> Response:
     _, predicted = torch.max(output.data, 1)
 
     # Convert the result to a Python number
-    result = predicted.item()
+    result = predicted[0].item()
     print(result)
 
     return web.json_response({'result': result})
