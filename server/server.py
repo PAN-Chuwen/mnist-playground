@@ -8,6 +8,7 @@ import torch
 from torchvision import transforms
 from torch import nn
 import json
+import os
 
 # Model architecture
 model = nn.Sequential(
@@ -20,7 +21,15 @@ model = nn.Sequential(
 )
 
 # Load the model
-model.load_state_dict(torch.load('./mnist_model.pth'))
+# Get the directory of the current script
+script_dir = os.path.dirname(os.path.realpath(__file__))
+
+# Construct the path to the model file
+model_path = os.path.join(script_dir, 'mnist_model.pth')
+
+# Load the model
+model.load_state_dict(torch.load(model_path))
+
 model.eval()
 
 # Check if a GPU is available and if not, use a CPU
@@ -72,11 +81,13 @@ async def predict(request: Request) -> Response:
 
 # Serve the index.html file
 async def index(request):
-    return web.FileResponse('./index.html')
+    index_path = os.path.join(script_dir, 'index.html')
+    return web.FileResponse(index_path)
 
 # Serve the script.js file
 async def script(request):
-    return web.FileResponse('./script.js')
+    script_path = os.path.join(script_dir, 'script.js')
+    return web.FileResponse(script_path)
 
 app = web.Application()
 app.router.add_get('/', index)
