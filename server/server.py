@@ -74,7 +74,7 @@ async def predict(request: Request) -> Response:
     _, predicted = torch.max(output.data, 1)
 
     # Convert the result to a Python number
-    result = predicted[0].item()
+    result = predicted[0]
     print(result)
 
     return web.json_response({'result': result})
