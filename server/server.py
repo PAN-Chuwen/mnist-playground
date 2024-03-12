@@ -44,11 +44,13 @@ async def predict(request: Request) -> Response:
 
     # Open the image and convert it to grayscale
     image = Image.open(io.BytesIO(image_data)).convert('L')
-    # Save the image to a file
-    image.save('received_image.png')
+    
 
     # Resize the image to 28x28
     image = image.resize((28, 28))
+
+    # Save the image to a file
+    image.save('received_image.png')
 
     # Resize and normalize the image
     transform = transforms.Compose([
@@ -74,7 +76,7 @@ async def predict(request: Request) -> Response:
     _, predicted = torch.max(output.data, 1)
 
     # Convert the result to a Python number
-    result = predicted[0]
+    result = predicted.item()
     print(result)
 
     return web.json_response({'result': result})
