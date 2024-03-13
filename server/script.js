@@ -20,7 +20,7 @@ canvas.addEventListener('mousemove', draw);
 
 function draw(e) {
     if (!painting) return;
-    ctx.lineWidth = 10;
+    ctx.lineWidth = 20;
     ctx.lineCap = 'round';
     ctx.strokeStyle = 'white';
 
@@ -51,8 +51,22 @@ function sendImageToServer() {
             image: dataUrl
         })
     })
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById('result').textContent = 'Predicted digit: ' + data.result;
-    });
+        .then(response => response.json())
+        .then(data => {
+            // Use the predicted result to change the color of the buttons
+            let predictionResult = data.result;
+            // Select button with the predicted digit
+            let predictedButton = document.getElementById('btn' + predictionResult);
+            // Change the color of the button to green
+            predictedButton.style.backgroundColor = 'green';
+            // Change the color of the other buttons to red
+            let buttons = document.getElementById('prediction-btns').children;
+            for (let i = 0; i < buttons.length; i++) {
+                if (buttons[i] !== predictedButton) {
+                    buttons[i].style.backgroundColor = 'red';
+                }
+            }
+
+            // Wait for either user click or new drawing
+        });
 }
