@@ -25,7 +25,7 @@ model = nn.Sequential(
 script_dir = os.path.dirname(os.path.realpath(__file__))
 
 # Construct the path to the model file
-model_path = os.path.join(script_dir, 'mnist_model.pth')
+model_path = os.path.join(script_dir, '../mnist_model.pth')
 
 # Load the model
 model.load_state_dict(torch.load(model_path))
