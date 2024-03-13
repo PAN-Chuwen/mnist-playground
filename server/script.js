@@ -67,6 +67,49 @@ function sendImageToServer() {
                 }
             }
 
-            // Wait for either user click or new drawing
+            // Wait for either user click or new drawing on canvas
+            let buttonClickPromise = new Promise((resolve) => {
+                for (let i = 0; i < buttons.length; i++) {
+                    buttons[i].addEventListener('click', () => {
+                        resolve({ inferenceResult: data.result, feedbackResult: i });
+                    });
+                }
+            });
+            let canvasDrawPromise = new Promise((resolve) => {
+                canvas.addEventListener('mousedown', () => {
+                    resolve();
+                });
+            });
+
+            // When either of the promises resolves:
+            return Promise.race([buttonClickPromise, canvasDrawPromise]);
+        })
+        .then((userFeedback) => {
+            // Reset the color of buttons
+            let buttons = document.getElementById('prediction-btns').children;
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].style.backgroundColor = 'white';
+            }
+            // Send the feedback to the server
+            sendFeedbackToServer(userFeedback.inferenceResult, userFeedback.feedbackResult);
+        })
+        .then((response) => console.log(response.json));
+}
+
+function sendFeedbackToServer(inferenceResult, userFeedback, userDrawnImage) {
+    fetch('/feedback', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            inferenceResult: inferenceResult,
+            userFeedback: userFeedback,
+            userDrawnImage: userDrawnImage
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Feedback sent to server');
         });
 }

@@ -81,6 +81,11 @@ async def predict(request: Request) -> Response:
 
     return web.json_response({'result': result})
 
+async def feedback(request: Request) -> Response:
+    data = await request.json()
+    print(data)
+    return web.json_response({'status': 'ok'})
+
 # Serve the index.html file
 async def index(request):
     index_path = os.path.join(script_dir, 'index.html')
@@ -95,6 +100,7 @@ app = web.Application()
 app.router.add_get('/', index)
 app.router.add_get('/script.js', script)
 app.router.add_post('/predict', predict)
+app.router.add_post('/feedback', feedback)
 
 if __name__ == '__main__':
     web.run_app(app)
