@@ -10,6 +10,8 @@ from torch import nn
 import json
 import subprocess
 import os
+from datetime import datetime
+import uuid
 
 # Model architecture
 model = nn.Sequential(
@@ -40,6 +42,12 @@ model.to(device)
 # TODO: consider the case when multiple users are using the app at the same time
 current_img_path = os.path.join(script_dir, 'received_image.png')
 
+
+def generate_unique_filename():
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    filename = 'received_image_' + timestamp + '.png'
+    return filename
+
 async def predict(request: Request) -> Response:
     # Get the image data from the POST request
     data = await request.json()
@@ -52,6 +60,9 @@ async def predict(request: Request) -> Response:
 
     # Resize the image to 28x28
     image = image.resize((28, 28))
+
+    global current_img_path
+    current_img_path = os.path.join(script_dir, generate_unique_filename())
 
     # Save the image to a file
     image.save(current_img_path)
