@@ -30,6 +30,9 @@ script_dir = os.path.dirname(os.path.realpath(__file__))
 # Construct the path to the model file
 model_path = os.path.join(script_dir, '../mnist_model.pth')
 
+# Image directory
+image_dir = os.path.join(script_dir, '../images')
+
 # Load the model
 model.load_state_dict(torch.load(model_path))
 
@@ -40,7 +43,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
 # TODO: consider the case when multiple users are using the app at the same time
-current_img_path = os.path.join(script_dir, 'received_image.png')
+current_img_path = os.path.join(image_dir, 'received_image.png')
 
 
 def generate_unique_filename():
@@ -62,7 +65,7 @@ async def predict(request: Request) -> Response:
     image = image.resize((28, 28))
 
     global current_img_path
-    current_img_path = os.path.join(script_dir, generate_unique_filename())
+    current_img_path = os.path.join(image_dir, generate_unique_filename())
 
     # Save the image to a file
     image.save(current_img_path)
@@ -111,7 +114,7 @@ def add_metadata_to_image(image_path, inference_result, user_feedback):
     metadata_json = json.dumps(metadata)
 
     # Call exiftool
-    subprocess.run(['exiftool', '-UserComment=' + metadata_json, image_path])
+    subprocess.run(['exiftool', '-overwrite_original', '-UserComment=' + metadata_json, image_path])
 
 # Serve the index.html file
 async def index(request):
