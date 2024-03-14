@@ -8,6 +8,7 @@ import torch
 from torchvision import transforms
 from torch import nn
 import json
+import subprocess
 import os
 
 # Model architecture
@@ -36,6 +37,9 @@ model.eval()
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
+# TODO: consider the case when multiple users are using the app at the same time
+current_img_path = os.path.join(script_dir, 'received_image.png')
+
 async def predict(request: Request) -> Response:
     # Get the image data from the POST request
     data = await request.json()
@@ -50,7 +54,7 @@ async def predict(request: Request) -> Response:
     image = image.resize((28, 28))
 
     # Save the image to a file
-    image.save('received_image.png')
+    image.save(current_img_path)
 
     # Resize and normalize the image
     transform = transforms.Compose([
@@ -84,7 +88,19 @@ async def predict(request: Request) -> Response:
 async def feedback(request: Request) -> Response:
     data = await request.json()
     print(data)
+    add_metadata_to_image(current_img_path, data['inferenceResult'], data['userFeedback'])
     return web.json_response({'status': 'ok'})
+
+def add_metadata_to_image(image_path, inference_result, user_feedback):
+    # Prepare the metadata
+    metadata = {
+        'inferenceResult': inference_result,
+        'userFeedback': user_feedback
+    }
+    metadata_json = json.dumps(metadata)
+
+    # Call exiftool
+    subprocess.run(['exiftool', '-UserComment=' + metadata_json, image_path])
 
 # Serve the index.html file
 async def index(request):
