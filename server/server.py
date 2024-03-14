@@ -102,7 +102,7 @@ async def predict(request: Request) -> Response:
 async def feedback(request: Request) -> Response:
     data = await request.json()
     print(data)
-    add_metadata_to_image(current_img_path, data['inferenceResult'], data['userFeedback'])
+    add_metadata_to_image(current_img_path, data['inferenceResult'], data['feedbackResult'])
     return web.json_response({'status': 'ok'})
 
 def add_metadata_to_image(image_path, inference_result, user_feedback):
